@@ -7055,91 +7055,82 @@ iframe.contentWindow.alert("It seems the GitHub is either blocked or down.\n\nIf
     </aside>
   </main>
 
-  <script>
-    // Escape HTML special chars for safe display
-    function escapeHtml(str) {
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // everything inside here runs only after DOM is ready
 
-    // Retrieve raw snippet from non-executing script tag
-    function getRawSnippet(){
-      const el = document.getElementById('rawSnippet');
-      return el ? el.textContent : '';
-    }
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
-    // Render escaped snippet into visible code block
-    function renderSnippet(){
-      const raw = getRawSnippet();
-      const codeEl = document.querySelector('#codeBlock code');
-      if(codeEl){
-        codeEl.innerHTML = escapeHtml(raw.trim());
+  function getRawSnippet(){
+    const el = document.getElementById('rawSnippet');
+    return el ? el.textContent : '';
+  }
+
+  function renderSnippet(){
+    const raw = getRawSnippet();
+    const codeEl = document.querySelector('#codeBlock code');
+    if(codeEl){
+      codeEl.innerHTML = escapeHtml(raw.trim());
+    }
+  }
+
+  async function copyText(text){
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok;
+      } catch (err) {
+        document.body.removeChild(ta);
+        return false;
       }
     }
+  }
 
-    // Clipboard copy (raw text)
-    async function copyText(text){
-      try{
-        await navigator.clipboard.writeText(text);
-        return true;
-      }catch(e){
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        try{ document.execCommand('copy'); document.body.removeChild(ta); return true;}catch(err){document.body.removeChild(ta); return false}
-      }
-    }
+  renderSnippet();
 
-    // Init
-    renderSnippet();
+  document.getElementById('copyTop').addEventListener('click', async ()=>{
+    const raw = getRawSnippet();
+    if(!raw.trim()){ alert('No snippet present to copy.'); return; }
+    const ok = await copyText(raw);
+    alert(ok ? 'Copied!' : 'Copy failed');
+  });
 
-    document.getElementById('copyTop').addEventListener('click', async ()=>{
-      const raw = getRawSnippet();
-      if(!raw.trim()){ alert('No snippet present to copy. Insert your snippet into the rawSnippet area in the HTML.'); return; }
+  document.getElementById('copyAlt').addEventListener('click', async ()=>{
+    const raw = getRawSnippet();
+    if(!raw.trim()){ alert('No snippet present to copy.'); return; }
+    const ok = await copyText(raw);
+    alert(ok ? 'Copied!' : 'Copy failed');
+  });
 
-      // Optional confirmation
-      if(!confirm('Copy raw snippet to clipboard? Only run scripts in a safe, authorised environment.')) return;
-
-      const ok = await copyText(raw);
-      const btn = document.getElementById('copyTop');
-      if(ok){
-        const prev = btn.innerHTML;
-        btn.innerHTML = 'Copied ✓';
-        setTimeout(()=> btn.innerHTML = prev, 1400);
-      }else{
-        btn.innerHTML = 'Copy failed';
-        setTimeout(()=> btn.innerHTML = 'Copy code', 1400);
-      }
-    });
-
-    document.getElementById('copyAlt').addEventListener('click', async ()=>{
-      const raw = getRawSnippet();
-      if(!raw.trim()){ alert('No snippet present to copy.'); return; }
-      const ok = await copyText(raw);
-      const btn = document.getElementById('copyAlt');
-      if(ok){btn.innerHTML = 'Copied ✓'; setTimeout(()=> btn.innerHTML = 'Copy (alternate)', 1400);} else {btn.innerHTML='Fail'; setTimeout(()=>btn.innerHTML='Copy (alternate)',1400)}
-    });
-
-    document.getElementById('selectAll').addEventListener('click', ()=>{
-      const range = document.createRange();
-      range.selectNodeContents(document.getElementById('codeBlock'));
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-    });
-
-    // Keyboard shortcut: Ctrl/Cmd+Shift+C copies raw snippet
-    document.addEventListener('keydown', (e)=>{
-      if((e.ctrlKey||e.metaKey) && e.shiftKey && e.key.toLowerCase()==='c'){
-        e.preventDefault();
-        document.getElementById('copyTop').click();
-      }
-    });
-  </script>
+  document.getElementById('selectAll').addEventListener('click', ()=>{
+    const codeBlock = document.querySelector('#codeBlock code');
+    if (!codeBlock) return;
+    const range = document.createRange();
+    range.selectNodeContents(codeBlock);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  });
+});
+</script>
 </body>
+
 </html>
