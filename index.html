@@ -3,65 +3,105 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tassomai</title>
+<title>RG Blooket Addons</title>
 <style>
+  /* Reset */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #4e54c8, #8f94fb);
-    margin: 0;
+    min-height: 100vh;
+    background: #0d0d0d;
+    color: #e0e0e0;
   }
+
   .container {
-    background: #fff;
-    padding: 40px 60px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    background: #1c1c1c;
+    padding: 55px 65px;
+    border-radius: 22px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 15px rgba(66,165,245,0.3);
     text-align: center;
+    max-width: 420px;
+    width: 100%;
   }
+
   h1 {
-    margin-bottom: 30px;
-    color: #333;
+    font-size: 2.3em;
+    margin-bottom: 5px;
+    color: #64b5f6;
+    letter-spacing: 1px;
   }
+
+  h2 {
+    font-size: 1.25em;
+    margin: 25px 0 15px;
+    color: #90a4ae;
+  }
+
   .btn {
     display: inline-block;
-    margin: 10px;
-    padding: 15px 25px;
+    margin: 10px 5px;
+    padding: 14px 30px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     color: #fff;
-    background: #4e54c8;
+    background: linear-gradient(135deg, #42a5f5, #1e88e5);
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: transform 0.2s, background 0.2s;
+    transition: all 0.2s ease;
     text-decoration: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
   }
+
   .btn:hover:not(:disabled) {
-    transform: scale(1.05);
-    background: #6c63ff;
+    background: linear-gradient(135deg, #64b5f6, #42a5f5);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.4);
   }
+
   .btn:disabled {
-    background: #888;  /* Greyed out */
+    background: #555;
     cursor: not-allowed;
-    transform: none;
+    box-shadow: none;
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding: 35px 20px;
+    }
+    h1 {
+      font-size: 1.8em;
+    }
+    .btn {
+      padding: 12px 22px;
+      font-size: 14px;
+    }
   }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>RG Blooket Addons</h1>
-  <button class="btn" disabled>Download Extension</button>
-  <button class="btn" id="downloadZip">Download Unpacked</button>
+  <h2>Version 2</h2>
+  <button class="btn" disabled>Chrome Webstore</button>
+  <button class="btn" id="downloadZip">Developer Download</button>
   <a href="https://pastebin.com/raw/HC50CWGC" class="btn" target="_blank">Copy Code</a>
+
+  <h2>Version 1</h2>
+  <a href="https://pastebin.com/raw/xeWqwMvc" class="btn" target="_blank">Copy Code</a>
 </div>
 
 <script>
   document.getElementById('downloadZip').addEventListener('click', function() {
     const link = document.createElement('a');
-    link.href = 'files/BlooketAddons.zip'; // Put your zip file path here
+    link.href = 'files/BlooketAddons.zip';
     link.download = 'BlooketAddons.zip';
     document.body.appendChild(link);
     link.click();
